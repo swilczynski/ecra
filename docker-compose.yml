@@ -1,0 +1,33 @@
+version: "3"
+services:
+    frontend:
+        extra_hosts:
+            - "ecra.local:127.0.0.1"
+        build:
+            context: ./frontend
+            dockerfile: Dockerfile
+        ports:
+            - "3000:8080"
+        volumes:
+            - ./frontend/public:/usr/app/public
+            - ./frontend/src:/usr/app/src
+            - ./frontend/.eslintrc.js:/usr/app/.eslintrc.js
+            - ./frontend/babel.config.js:/usr/app/babel.config.js
+            - ./frontend/postcss.config.js:/usr/app/postcss.config.js
+        tty: true
+        environment:
+            - REACT_APP_API_URL=http://127.0.0.1:3100
+            - CHOKIDAR_USEPOLLING=true
+    backend:
+        extra_hosts:
+            - "ecra-backend.local:127.0.0.1"
+        build:
+            context: ./backend
+            dockerfile: Dockerfile
+        ports:
+            - "3100:3100"
+        volumes:
+            - ./backend/src:/usr/app/src
+            - ./backend/data:/usr/app/data
+        environment:
+            - CHOKIDAR_USEPOLLING=true
