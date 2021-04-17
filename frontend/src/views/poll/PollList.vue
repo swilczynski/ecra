@@ -14,6 +14,13 @@
                 </template>
             </Card>
         </div>
+        <div class="p-d-flex p-col-4">
+            <Card class="p-d-flex add-new">
+                <template #footer>
+                    <ButtonLink label="Add new" icon="pi-pencil" class="p-button-secondary" :to="{ name: 'poll-add'}"/>
+                </template>
+            </Card>
+        </div>
     </div>
 </template>
 
@@ -45,6 +52,21 @@ export default {
 };
 </script>
 <style scoped lang="scss">
+    .add-new {
+        width: 100%;
+    }
+
+    ::v-deep(.add-new) {
+        .p-card-body {
+            width: 100%;
+
+            .p-card-footer {
+                display: flex;
+                justify-content: center;
+            }
+        }
+    }
+
     ::v-deep(.p-card) {
         .p-card-body {
             display: flex;
