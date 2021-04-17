@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-module.exports = mongoose.model('Question', new mongoose.Schema({
+module.exports = mongoose.model('Poll', new mongoose.Schema({
     name: String,
     description: String,
     questions: [

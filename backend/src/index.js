@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 
 const { getConnection } = require('./database');
 
-const Question = require('./repository/question');
+const Poll = require('./repository/poll');
 
 const app = express();
 
@@ -14,44 +14,42 @@ app.use(parser.raw());
 app.use(parser.json());
 
 app.get(
-    '/items',
+    '/polls',
     async (req, res) => {
-        const questions = await Question.find({});
+        const polls = await Poll.find({});
 
-        res.send(questions);
+        res.send(polls);
     },
 );
 
 app.get(
-    '/items/:id',
+    '/polls/:id',
     async (req, res) => {
-        const question = await Question.findOne({ _id: req.params.id })
+        const poll = await Poll.findOne({ _id: req.params.id })
 
-        res.send(question);
+        res.send(poll);
     },
 );
 
 app.put(
-    '/items',
+    '/polls',
     async (req, res) => {
-        const question = await Question.findOne({ _id: req.body._id })
+        const poll = await Poll.findOne({ _id: req.body._id })
 
-        question.name = req.body.name;
-        question.description = req.body.description;
-        question.questions = req.body.questions;
+        poll.name = req.body.name;
+        poll.description = req.body.description;
+        poll.questions = req.body.questions;
 
-        question.save();
+        poll.save();
 
         res.send({status: 'OK'});
     },
 );
 
 app.post(
-    '/items',
+    '/polls',
     async (req, res) => {
-
         console.log(req.body);
-
         res.send({status: 'OK'});
     },
 );

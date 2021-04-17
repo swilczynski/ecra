@@ -1,6 +1,4 @@
-import axios from 'axios';
-
-const apiUrl = () => 'http://localhost:3100';
+import * as repository from '../repository/polls';
 
 const store = {
     namespaced: true,
@@ -53,7 +51,7 @@ const store = {
 
             commit('progressbar/show', null, { root: true });
 
-            const polls = await axios.get(`${apiUrl()}/items`);
+            const polls = await repository.getAll();
 
             commit('fetchAll', polls.data);
             commit('progressbar/hide', null, { root: true });
@@ -61,7 +59,7 @@ const store = {
         async fetchById({ commit }, id) {
             commit('progressbar/show', null, { root: true });
 
-            const poll = await axios.get(`${apiUrl()}/items/${id}`);
+            const poll = await repository.getById(id);
 
             commit('fetchById', poll.data);
             commit('progressbar/hide', null, { root: true });
@@ -70,8 +68,8 @@ const store = {
             commit('resetAll');
 
             commit('progressbar/show', null, { root: true });
-            console.log(state.poll);
-            await axios.put(`${apiUrl()}/items`, state.poll);
+
+            await repository.save(state.poll);
 
             commit('progressbar/hide', null, { root: true });
         },
