@@ -2,7 +2,7 @@
     <form>
         <Card class="p-mt-1" v-if="loading">
             <template #content>
-                <PollForm :poll="poll" @update="updatePoll(poll)"/>
+                <PollForm :poll="poll" @update="updatePoll($event)"/>
             </template>
             <template #footer>
                 <Button icon="pi pi-save" label="Save" @click="savePoll()"/>
@@ -50,6 +50,7 @@ export default {
             this.model = poll;
         },
         async savePoll() {
+            console.log(this.model);
             await this.$store.dispatch('polls/update', this.model);
 
             this.$toast.add({
