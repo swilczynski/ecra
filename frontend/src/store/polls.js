@@ -1,41 +1,35 @@
 import * as repository from '../repository/polls';
 
+const defaults = {
+    poll: {
+        initialized: false,
+        name: '',
+        description: '',
+        questions: [],
+    },
+};
+
 const store = {
     namespaced: true,
     state: {
-        polls: [],
-        poll: {},
+        polls: null,
+        poll: defaults.poll,
     },
     mutations: {
         fetchAll(state, polls) {
             state.polls = polls;
         },
         fetchById(state, poll) {
-            state.poll = { ...poll, loaded: true };
-        },
-        addQuestion(state, question = {}) {
-            const poll = { ...state.poll };
-
-            state.poll = {
-                ...poll, questions: [...poll.questions || [], question],
-            };
-        },
-        deleteQuestion(state, index = {}) {
-            const poll = { ...state.poll };
-
-            state.poll = {
-                ...poll, questions: poll.questions.filter((question, i) => i !== index),
-            };
-        },
-        updateQuestion(state, question) {
-            const poll = { ...state.poll };
-
-            poll.questions[question.index] = question;
-
             state.poll = { ...poll };
         },
+        update(state, poll) {
+            state.poll = { ...poll };
+        },
+        remove(state, id) {
+            state.polls = state.polls.filter((poll) => poll._id !== id);
+        },
         reset(state) {
-            state.poll = {};
+            state.poll = defaults.poll;
         },
         resetAll(state) {
             state.polls = [];
@@ -64,23 +58,28 @@ const store = {
             commit('fetchById', poll.data);
             commit('progressbar/hide', null, { root: true });
         },
-        async updatePoll({ commit, state }) {
+        async update({ commit }, poll) {
             commit('resetAll');
 
             commit('progressbar/show', null, { root: true });
 
-            await repository.save(state.poll);
+            if ('_id' in poll) {
+                const updated = await repository.update(poll);
+                commit('update', updated.data);
+            } else {
+                const inserted = await repository.insert(poll);
+                commit('update', inserted.data);
+            }
 
             commit('progressbar/hide', null, { root: true });
         },
-        addQuestion({ commit }, question) {
-            commit('addQuestion', question);
-        },
-        deleteQuestion({ commit }, index) {
-            commit('deleteQuestion', index);
-        },
-        updateQuestion({ commit }, question) {
-            commit('updateQuestion', question);
+        async remove({ commit }, id) {
+            commit('progressbar/show', null, { root: true });
+
+            await repository.remove(id);
+            commit('remove', id);
+
+            commit('progressbar/hide', null, { root: true });
         },
     },
 };

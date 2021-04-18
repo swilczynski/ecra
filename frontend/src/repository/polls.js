@@ -13,12 +13,22 @@ function getById(id) {
     return axios.get(`${apiUrl}/${endpoint}/${id}`);
 }
 
-function save(poll) {
+function insert(poll) {
+    return axios.post(`${apiUrl}/${endpoint}`, poll);
+}
+
+function update(poll) {
     return axios.put(`${apiUrl}/${endpoint}`, poll);
+}
+
+function remove(id) {
+    return axios.delete(`${apiUrl}/${endpoint}/${id}`);
 }
 
 export {
     getAll,
     getById,
-    save,
+    insert,
+    update,
+    remove,
 };

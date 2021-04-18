@@ -14,7 +14,7 @@ const router = createRouter({
         {
             path: '/poll/add',
             name: 'poll-add',
-            component: () => import(/* webpackChunkName: "about" */ './views/poll/PollEdit.vue'),
+            component: () => import(/* webpackChunkName: "about" */ './views/poll/PollAdd.vue'),
             meta: {
                 breadcrumbs: [
                     { label: 'Add Poll' },

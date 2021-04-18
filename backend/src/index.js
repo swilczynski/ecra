@@ -12,6 +12,7 @@ const app = express();
 app.use(cors());
 app.use(parser.raw());
 app.use(parser.json());
+app.use((res, req, next) => setTimeout(next, 1000));
 
 app.get(
     '/polls',
@@ -42,6 +43,15 @@ app.put(
 
         poll.save();
 
+        res.send(poll);
+    },
+);
+
+app.delete(
+    '/polls/:id',
+    async (req, res) => {
+        await Poll.deleteOne({ _id: req.params.id })
+
         res.send({status: 'OK'});
     },
 );
@@ -49,8 +59,9 @@ app.put(
 app.post(
     '/polls',
     async (req, res) => {
-        console.log(req.body);
-        res.send({status: 'OK'});
+        const poll = await Poll.create(req.body);
+
+        res.send(poll);
     },
 );
 
